@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineCritic - Login & Signup</title>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-wrapper">
+            <!-- Left Side - Branding -->
+            <div class="left-panel">
+                <div class="brand-content">
+                    <h1 class="brand-logo">🎬 CineCritic</h1>
+                    <p class="brand-tagline">Your personal movie review journal</p>
+                    <div class="features">
+                        <div class="feature-item">
+                            <span class="feature-icon">⭐</span>
+                            <span>Rate your favorite movies</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✍️</span>
+                            <span>Write detailed reviews</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📚</span>
+                            <span>Build your movie collection</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Auth Forms -->
+            <div class="right-panel">
+                <div class="form-container">
+                    <!-- Login Form -->
+                    <div id="loginForm" class="auth-form active">
+                        <h2 class="form-title">Welcome Back</h2>
+                        <p class="form-subtitle">Sign in to continue your movie journey</p>
+                        
+                        <form id="loginFormElement" onsubmit="handleLogin(event)">
+                            <div class="input-group">
+                                <label for="loginUsername">Username</label>
+                                <input type="text" id="loginUsername" name="username" required placeholder="Enter your username">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="loginPassword">Password</label>
+                                <input type="password" id="loginPassword" name="password" required placeholder="Enter your password">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <span id="loginBtnText">Sign In</span>
+                                <span id="loginLoader" class="loader" style="display: none;"></span>
+                            </button>
+                        </form>
+                        
+                        <div class="form-footer">
+                            <p>Don't have an account? <a href="#" onclick="switchToSignup(event)" class="switch-link">Sign Up</a></p>
+                        </div>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <div id="signupForm" class="auth-form">
+                        <h2 class="form-title">Create Account</h2>
+                        <p class="form-subtitle">Join us and start reviewing movies</p>
+                        
+                        <form id="signupFormElement" onsubmit="handleSignup(event)">
+                            <div class="input-group">
+                                <label for="signupUsername">Username</label>
+                                <input type="text" id="signupUsername" name="username" required placeholder="Choose a username">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="signupEmail">Email</label>
+                                <input type="email" id="signupEmail" name="email" required placeholder="Enter your email">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="signupPassword">Password</label>
+                                <input type="password" id="signupPassword" name="password" required placeholder="Create a password" minlength="6">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <span id="signupBtnText">Create Account</span>
+                                <span id="signupLoader" class="loader" style="display: none;"></span>
+                            </button>
+                        </form>
+                        
+                        <div class="form-footer">
+                            <p>Already have an account? <a href="#" onclick="switchToLogin(event)" class="switch-link">Sign In</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
