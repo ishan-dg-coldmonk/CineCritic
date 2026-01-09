@@ -5,6 +5,7 @@ import com.moviereview.dto.SignupRequest;
 import com.moviereview.model.User;
 import com.moviereview.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,9 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public Map<String, Object> signup(SignupRequest request) {
         Map<String, Object> response = new HashMap<>();
@@ -34,7 +38,7 @@ public class AuthService {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // In production, hash the password!
+        user.setPassword(passwordEncoder.encode(request.getPassword())); // Hash the password
 
         User savedUser = userRepository.save(user);
 
@@ -59,7 +63,7 @@ public class AuthService {
 
         User user = userOpt.get();
 
-        if (!user.getPassword().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             response.put("success", false);
             response.put("message", "Invalid username or password");
             return response;
