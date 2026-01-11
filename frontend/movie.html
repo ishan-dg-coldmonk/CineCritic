@@ -54,38 +54,107 @@
 
     <!-- Add/Edit Review Modal -->
     <div id="reviewModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-large">
             <div class="modal-header">
                 <h2 id="modalTitle">Add Movie Review</h2>
                 <button onclick="closeModal()" class="close-btn">&times;</button>
             </div>
             
             <form id="reviewForm" onsubmit="handleSubmitReview(event)">
-                <!-- Movie Search -->
-                <div class="input-group">
-                    <label for="movieSearch">Search Movie</label>
-                    <input 
-                        type="text" 
-                        id="movieSearch" 
-                        placeholder="Type to search movies..."
-                        autocomplete="off"
-                        oninput="searchMovies()"
-                    >
-                    <div id="movieSuggestions" class="suggestions"></div>
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <h3 class="filter-title">🔍 Search & Filter Movies</h3>
+                    
+                    <div class="filter-controls">
+                        <!-- Search Bar -->
+                        <div class="search-wrapper">
+                            <input 
+                                type="text" 
+                                id="movieSearch" 
+                                placeholder="Search by movie title..."
+                                autocomplete="off"
+                                oninput="handleSearchInput()"
+                            >
+                            <span class="search-icon">🔎</span>
+                        </div>
+
+                        <!-- Filter Dropdowns -->
+                        <div class="filter-dropdowns">
+                            <select id="yearFilter" onchange="handleFilterChange()">
+                                <option value="">Any Year</option>
+                            </select>
+
+                            <select id="typeFilter" onchange="handleFilterChange()">
+                                <option value="">All Types</option>
+                                <option value="movie">Movie</option>
+                                <option value="series">TV Series</option>
+                            </select>
+
+                            <button type="button" onclick="applyFilters()" class="btn-apply-filter">
+                                Show Results
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active Filters & Status -->
+                    <div class="filter-info">
+                        <div id="activeFilters" class="active-filters" style="display: none;">
+                            <span class="filter-label">Active:</span>
+                            <div id="filterTags" class="filter-tags"></div>
+                            <button type="button" onclick="clearAllFilters()" class="btn-clear-filters">Clear</button>
+                        </div>
+                        <div id="searchStatus" class="search-status"></div>
+                    </div>
+                </div>
+
+                <!-- Movie Carousel -->
+                <div id="movieCarouselSection" class="carousel-section" style="display: none;">
+                    <div class="carousel-header">
+                        <h3 id="carouselTitle">Select a Movie</h3>
+                        <div class="carousel-controls">
+                            <button type="button" onclick="scrollCarousel('left')" class="carousel-nav-btn">
+                                <span>‹</span>
+                            </button>
+                            <button type="button" onclick="scrollCarousel('right')" class="carousel-nav-btn">
+                                <span>›</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="carousel-wrapper">
+                        <div id="movieCarousel" class="movie-carousel">
+                            <!-- Movie posters will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div id="carouselLoading" class="carousel-loading" style="display: none;">
+                        <div class="spinner-small"></div>
+                        <p>Loading movies...</p>
+                    </div>
+                    
+                    <div id="carouselEmpty" class="carousel-empty" style="display: none;">
+                        <p>No movies found. Try different filters or search terms.</p>
+                    </div>
                 </div>
 
                 <!-- Selected Movie Display -->
                 <div id="selectedMovieDisplay" class="selected-movie" style="display: none;">
+                    <div class="selected-badge">✓ Selected</div>
                     <img id="selectedPoster" src="" alt="Movie Poster">
                     <div class="movie-info">
                         <h3 id="selectedTitle"></h3>
-                        <p id="selectedDirector"></p>
+                        <p id="selectedYear" class="movie-year"></p>
+                        <p id="selectedDirector" class="movie-director"></p>
+                        <p id="selectedGenre" class="movie-genre"></p>
+                        <button type="button" onclick="clearSelectedMovie()" class="btn-change-movie">
+                            Change Movie
+                        </button>
                     </div>
                 </div>
 
                 <!-- Rating -->
                 <div class="input-group">
-                    <label>Your Rating</label>
+                    <label>Your Rating <span class="required">*</span></label>
                     <div class="star-rating" id="starRating">
                         <span class="star" data-rating="1" onclick="setRating(1)">☆</span>
                         <span class="star" data-rating="2" onclick="setRating(2)">☆</span>
@@ -93,22 +162,27 @@
                         <span class="star" data-rating="4" onclick="setRating(4)">☆</span>
                         <span class="star" data-rating="5" onclick="setRating(5)">☆</span>
                     </div>
+                    <p class="rating-text" id="ratingText">Select a rating</p>
                 </div>
 
                 <!-- Review Text -->
                 <div class="input-group">
-                    <label for="reviewText">Your Review</label>
+                    <label for="reviewText">Your Review <span class="required">*</span></label>
                     <textarea 
                         id="reviewText" 
                         rows="5" 
                         placeholder="Share your thoughts about this movie..."
                         required
+                        maxlength="1000"
                     ></textarea>
+                    <div class="char-count">
+                        <span id="charCount">0</span> / 1000 characters
+                    </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" onclick="closeModal()" class="btn btn-secondary">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
                         <span id="submitBtnText">Save Review</span>
                         <span id="submitLoader" class="loader" style="display: none;"></span>
                     </button>
@@ -142,7 +216,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
